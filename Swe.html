@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Swetha S — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+[data-theme="dark"]{
+  --bg:#07080f;--surface:#0f1117;--surface2:#161824;
+  --border:#1c1f2e;--border2:#252839;
+  --text:#eef0f8;--text2:#b8bcd0;--muted:#60657e;--muted2:#8890aa;
+  --acc:#7c6af5;--acc-dim:#2d2860;--acc-faint:#16142e;
+  --acc-hover:#9b8fff;
+  --nav-bg:rgba(7,8,15,.92);
+  --tag-bg:#16142e;
+  --loader-bg:#07080f;
+  --grid-op:.03;
+  --dot-op:.6;
+  --edu-dot-border:#07080f;
+}
+[data-theme="light"]{
+  --bg:#f5f4ff;--surface:#ffffff;--surface2:#eeecff;
+  --border:#dddaf5;--border2:#c8c4ef;
+  --text:#0d0b1e;--text2:#2e2a50;--muted:#9896b8;--muted2:#6b6890;
+  --acc:#5b47e0;--acc-dim:#c8c3f5;--acc-faint:#edeaff;
+  --acc-hover:#4433cc;
+  --nav-bg:rgba(245,244,255,.92);
+  --tag-bg:#edeaff;
+  --loader-bg:#f5f4ff;
+  --grid-op:.06;
+  --dot-op:.5;
+  --edu-dot-border:#f5f4ff;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden;transition:background .35s,color .35s;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--acc-dim);border-radius:2px;}
+
+/* ══ LOADER ══ */
+#loader{
+  position:fixed;inset:0;background:var(--loader-bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  z-index:9999;transition:opacity .7s ease,visibility .7s ease;
+}
+#loader.hidden{opacity:0;visibility:hidden;}
+.l-monogram{
+  width:80px;height:80px;border-radius:50%;
+  border:2px solid var(--acc);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;position:relative;
+}
+.l-monogram::before{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1px solid var(--acc);opacity:.25;
+  animation:pulseRing 2s ease-in-out infinite;
+}
+.l-monogram span{font-family:'DM Serif Display',serif;font-size:32px;color:var(--acc);letter-spacing:-.02em;}
+@keyframes pulseRing{0%,100%{transform:scale(1);opacity:.25;}50%{transform:scale(1.12);opacity:.08;}}
+.l-name{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text);margin-bottom:4px;}
+.l-role{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted2);letter-spacing:.14em;margin-bottom:32px;}
+.terminal{font-family:'Share Tech Mono',monospace;font-size:12.5px;width:300px;}
+.t-line{height:23px;overflow:hidden;opacity:0;animation:lineIn .35s ease forwards;}
+.t-line.done{color:var(--muted);}
+.t-line.done::before{content:'✓ ';color:var(--acc);}
+.t-line.active::before{content:'> ';}
+.t-line.active{color:var(--acc);}
+.t-line.final{color:var(--acc);font-weight:700;}
+.progress-wrap{width:300px;height:1.5px;background:var(--border2);border-radius:2px;margin-top:20px;}
+.progress-bar{height:100%;width:0%;background:var(--acc);border-radius:2px;transition:width .5s ease;}
+@keyframes lineIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══ SITE ══ */
+#site{opacity:0;transition:opacity .8s ease;}
+#site.visible{opacity:1;}
+
+/* ══ NAV ══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:16px 64px;
+  background:var(--nav-bg);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  transition:background .35s,border-color .35s;
+}
+.nav-brand{font-family:'DM Serif Display',serif;font-size:22px;color:var(--acc);text-decoration:none;letter-spacing:.02em;font-style:italic;}
+.nav-right{display:flex;align-items:center;gap:28px;}
+.nav-links{display:flex;gap:24px;list-style:none;}
+.nav-links a{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);text-decoration:none;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;}
+.nav-links a:hover{color:var(--acc);}
+.ttoggle-wrap{display:flex;align-items:center;gap:8px;}
+.ttoggle-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;min-width:30px;}
+.ttoggle{width:42px;height:22px;border-radius:11px;background:var(--border2);border:1px solid var(--border2);cursor:pointer;position:relative;transition:background .3s;outline:none;flex-shrink:0;}
+.ttoggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--acc);transition:transform .3s;}
+[data-theme="light"] .ttoggle{background:var(--acc-dim);}
+[data-theme="light"] .ttoggle::after{transform:translateX(20px);}
+
+/* ══ HERO ══ */
+.hero{min-height:100vh;display:flex;align-items:center;padding:130px 64px 90px;position:relative;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;opacity:var(--grid-op);background-image:linear-gradient(var(--acc) 1px,transparent 1px),linear-gradient(90deg,var(--acc) 1px,transparent 1px);background-size:60px 60px;}
+.hero-orb{position:absolute;right:-80px;top:50%;transform:translateY(-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(124,106,245,.12) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{position:relative;z-index:1;max-width:800px;}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--acc);letter-spacing:.16em;text-transform:uppercase;margin-bottom:22px;}
+.hero-eyebrow::before{content:'';display:block;width:32px;height:1px;background:var(--acc);}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(54px,8vw,100px);line-height:.95;letter-spacing:-.02em;margin-bottom:6px;color:var(--text);}
+.hero h1 em{color:var(--acc);font-style:italic;}
+.hero-role{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:30px;}
+.hero-bio{font-size:15px;font-weight:300;color:var(--text2);line-height:1.9;max-width:560px;margin-bottom:44px;}
+.hero-bio strong{color:var(--acc);font-weight:600;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:60px;}
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--acc);color:#fff;font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:14px 28px;text-decoration:none;border:none;cursor:pointer;transition:background .2s,transform .15s;}
+.btn-p:hover{background:var(--acc-hover);transform:translateY(-2px);}
+.btn-o{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border2);color:var(--muted2);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:14px 28px;text-decoration:none;background:transparent;cursor:pointer;transition:border-color .2s,color .2s;}
+.btn-o:hover{border-color:var(--acc);color:var(--acc);}
+.hero-stats{display:flex;gap:44px;flex-wrap:wrap;}
+.hstat{border-left:2px solid var(--acc);padding-left:16px;}
+.hstat-num{font-size:32px;font-weight:800;color:var(--text);letter-spacing:-.03em;line-height:1;}
+.hstat-lbl{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px;}
+
+/* ══ SECTION ══ */
+section{padding:90px 64px;}
+.sec-label{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--acc);letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);max-width:160px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:clamp(28px,3.5vw,42px);letter-spacing:-.01em;margin-bottom:52px;color:var(--text);}
+
+/* ══ ABOUT ══ */
+.about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:80px;align-items:start;}
+.about-text p{font-size:15px;font-weight:300;color:var(--text2);line-height:1.9;margin-bottom:14px;}
+.about-text p strong{color:var(--acc);font-weight:600;}
+.about-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;}
+.badge{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--acc);border:1px solid var(--acc-dim);background:var(--acc-faint);padding:5px 13px;letter-spacing:.05em;}
+.edu-timeline{display:flex;flex-direction:column;}
+.edu-item{padding:20px 0 20px 26px;border-left:2px solid var(--border);position:relative;}
+.edu-item::before{content:'';position:absolute;left:-5px;top:28px;width:8px;height:8px;border-radius:50%;background:var(--acc);border:2px solid var(--edu-dot-border);}
+.edu-item:last-child{border-left-color:transparent;}
+.edu-year{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--acc);letter-spacing:.08em;margin-bottom:6px;}
+.edu-name{font-size:16px;font-weight:700;margin-bottom:4px;color:var(--text);}
+.edu-inst{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);}
+
+/* ══ ACHIEVEMENTS ══ */
+.ach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--border);}
+.ach-card{background:var(--surface);padding:30px 26px;transition:background .2s;}
+.ach-card:hover{background:var(--surface2);}
+.ach-icon{font-size:26px;margin-bottom:14px;}
+.ach-title{font-size:17px;font-weight:700;margin-bottom:8px;line-height:1.25;color:var(--text);}
+.ach-desc{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);line-height:1.7;}
+
+/* ══ IEEE ══ */
+.ieee-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+.ieee-card{background:var(--surface);padding:34px 30px;transition:background .2s;position:relative;overflow:hidden;}
+.ieee-card:hover{background:var(--surface2);}
+.ieee-card::after{content:'IEEE';position:absolute;right:18px;bottom:12px;font-family:'DM Serif Display',serif;font-size:48px;color:var(--acc);opacity:.05;letter-spacing:.04em;pointer-events:none;}
+.ieee-num{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--acc);letter-spacing:.12em;margin-bottom:14px;}
+.ieee-title{font-size:18px;font-weight:700;line-height:1.35;margin-bottom:8px;color:var(--text);}
+.ieee-sub{font-size:14px;font-weight:300;color:var(--muted2);font-style:italic;}
+.ieee-meta{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);margin-top:10px;}
+
+/* ══ PROJECTS ══ */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:var(--border);}
+.proj-card{background:var(--surface);padding:36px 32px;position:relative;overflow:hidden;transition:background .2s;cursor:pointer;}
+.proj-card:hover{background:var(--surface2);}
+.proj-card:hover .proj-arrow{opacity:1;transform:translate(0,0);}
+.proj-num{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--acc);letter-spacing:.1em;margin-bottom:18px;}
+.proj-name{font-size:22px;font-weight:700;margin-bottom:10px;color:var(--text);}
+.proj-desc{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:22px;}
+.proj-tags{display:flex;flex-wrap:wrap;gap:7px;}
+.tag{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--acc);border:1px solid var(--acc-dim);background:var(--tag-bg);padding:4px 10px;letter-spacing:.04em;}
+.proj-arrow{position:absolute;top:30px;right:28px;font-size:18px;color:var(--acc);opacity:0;transform:translate(-4px,4px);transition:opacity .2s,transform .2s;}
+
+/* ══ SKILLS ══ */
+.skills-outer{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:36px;}
+.skill-group h3{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--acc);text-transform:uppercase;letter-spacing:.15em;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.skill-list{list-style:none;}
+.skill-list li{font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--muted);padding:9px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;transition:color .2s;}
+.skill-list li:hover{color:var(--text);}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--acc);opacity:var(--dot-op);}
+.slvl{font-size:10px;color:var(--acc);letter-spacing:.06em;}
+.slvl-mid{font-size:10px;color:var(--muted);letter-spacing:.06em;}
+
+/* ══ CERTIFICATIONS CAROUSEL ══ */
+.carousel-wrap{position:relative;padding:0 28px;}
+.carousel-track-outer{overflow:hidden;}
+.carousel-track{display:flex;gap:20px;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform;}
+.cert-slide{
+  flex:0 0 calc(25% - 15px);
+  aspect-ratio:4/3;
+  background:var(--surface);
+  border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  cursor:pointer;transition:border-color .2s;
+}
+.cert-slide:hover{border-color:var(--acc);}
+.cert-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.cert-slide .cert-num{position:absolute;top:10px;left:12px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--acc);letter-spacing:.1em;background:var(--surface);padding:2px 6px;}
+.cert-slide .cert-ph-wrap{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.cert-slide .cert-ph{font-size:28px;color:var(--border2);}
+.cert-slide .cert-txt{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.06em;}
+.carousel-btn{
+  position:absolute;top:50%;transform:translateY(-60%);
+  width:36px;height:36px;
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--acc);font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,border-color .2s;z-index:2;
+}
+.carousel-btn:hover{background:var(--acc-faint);border-color:var(--acc);}
+.carousel-btn.prev{left:0;}
+.carousel-btn.next{right:0;}
+.carousel-btn:disabled{opacity:.25;cursor:default;}
+.carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:22px;}
+.cdot{width:6px;height:6px;border-radius:50%;background:var(--border2);border:none;cursor:pointer;padding:0;transition:background .2s,transform .2s;}
+.cdot.active{background:var(--acc);transform:scale(1.4);}
+.cert-hint{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);margin-top:18px;}
+
+/* ══ CONTACT ══ */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.contact-left h3{font-family:'DM Serif Display',serif;font-size:clamp(28px,3.5vw,42px);line-height:1.15;margin-bottom:16px;color:var(--text);}
+.contact-left p{font-size:15px;font-weight:300;color:var(--muted2);line-height:1.85;margin-bottom:28px;}
+.lang-row{display:flex;flex-wrap:wrap;gap:10px;}
+.lang-pill{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);border:1px solid var(--border);padding:6px 14px;letter-spacing:.06em;}
+.lang-pill .lvl{color:var(--acc);margin-left:6px;font-size:10px;}
+.lang-pill .lvl-mid{color:var(--muted2);margin-left:6px;font-size:10px;}
+.contact-links{display:flex;flex-direction:column;gap:11px;}
+.clink{display:flex;align-items:center;gap:14px;font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--muted);text-decoration:none;padding:14px 18px;border:1px solid var(--border);transition:border-color .2s,color .2s;background:transparent;}
+.clink:hover{border-color:var(--acc);color:var(--acc);}
+.clink-icon{font-size:15px;min-width:20px;text-align:center;}
+
+/* ══ FOOTER ══ */
+footer{padding:34px 64px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+footer p{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);}
+.foot-brand{font-family:'DM Serif Display',serif;font-size:18px;color:var(--acc);font-style:italic;}
+
+@media(max-width:960px){
+  nav{padding:14px 24px;}
+  .nav-links{display:none;}
+  .hero{padding:100px 24px 60px;}
+  section{padding:70px 24px;}
+  .about-grid,.contact-grid,.ieee-grid{grid-template-columns:1fr;gap:40px;}
+  .hero-orb{display:none;}
+  footer{padding:26px 24px;}
+  .cert-slide{flex:0 0 calc(33.333% - 14px);}
+}
+@media(max-width:540px){
+  .hero-stats{gap:24px;}
+  .cert-slide{flex:0 0 calc(50% - 10px);}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOADER ══ -->
+<div id="loader">
+  <div class="l-monogram"><span>S</span></div>
+  <div class="l-name">Swetha S.</div>
+  <div class="l-role">Full Stack &amp; AI Developer · VCET '26</div>
+  <div class="terminal" id="termLines"></div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+</div>
+
+<!-- ══ SITE ══ -->
+<div id="site">
+
+<nav>
+  <a href="#home" class="nav-brand">Swetha S.</a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#achievements">Achievements</a></li>
+      <li><a href="#ieee">IEEE</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#certifications">Certs</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="ttoggle-wrap">
+      <span class="ttoggle-lbl" id="themeLabel">Dark</span>
+      <button class="ttoggle" id="themeToggle" aria-label="Toggle theme"></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-orb"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Open to Opportunities · VCET CSE (Hons) '26</div>
+    <h1>Swetha<br><em>S.</em></h1>
+    <div class="hero-role">Full Stack Developer &nbsp;·&nbsp; AI Integration &nbsp;</div>
+    <p class="hero-bio">
+      <strong>Curious by nature. Builder by practice.</strong> 🔍<br><br>
+      Passionate about the space where <strong>technology meets real-world impact</strong> — researching AI trends, designing intelligent systems, and building sustainable digital solutions. Bringing both analytical depth and creative execution to everything I do. 🌿
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-p">View Projects →</a>
+      <a href="#contact" class="btn-o">Hire Me</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-num">2+</div><div class="hstat-lbl">Projects</div></div>
+      <div class="hstat"><div class="hstat-num">2</div><div class="hstat-lbl">Internships</div></div>
+      <div class="hstat"><div class="hstat-num">100+</div><div class="hstat-lbl">LeetCode</div></div>
+      <div class="hstat"><div class="hstat-num">2</div><div class="hstat-lbl">IEEE Papers</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-label">01 — About</div>
+  <div class="about-grid">
+    <div>
+      <h2 class="sec-title">Who I Am</h2>
+      <div class="about-text">
+        <p>I'm a <strong>CSE (Hons) student at VCET '26</strong>, currently sharpening my skills in Java, SQL, and AI integration. I thrive at the intersection of research and building — always exploring, always shipping.</p>
+        <p>Whether it's crafting intelligent web systems, publishing IEEE research, or contributing to purpose-driven tech — I bring both rigour and creativity to everything I do.</p>
+        <p>When I'm not coding, I'm reading about emerging AI trends, books , solving LeetCode Problems, or designing visuals that communicate ideas clearly.</p>
+      </div>
+      <div class="about-badges">
+        <span class="badge">CSE (Hons) '26</span>
+        <span class="badge">AI Integration</span>
+        <span class="badge">2 Internships</span>
+        <span class="badge">IEEE Author</span>
+        <span class="badge">HackerRank SQL Badge</span>
+        <span class="badge">Poster Presentation 2nd Prize</span>
+      </div>
+    </div>
+    <div>
+      <h2 class="sec-title">Education</h2>
+      <div class="edu-timeline">
+        <div class="edu-item">
+          <div class="edu-year">2022 — 2026</div>
+          <div class="edu-name">B.E. CSE (Honours)</div>
+          <div class="edu-inst">Velammal College of Engineering and Technology, Madurai</div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-year">2020 — 2022</div>
+          <div class="edu-name">AVMS Matric Higher Secondary School — HSC</div>
+          <div class="edu-inst">Ramanathapuram, Tamil Nadu</div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-year">2019 — 2020</div>
+          <div class="edu-name">Syed Ammal Matric  Higher Secondary Education — SSC</div>
+          <div class="edu-inst">Ramanathapuram, Tamil Nadu</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements" style="padding-top:0">
+  <div class="sec-label">02 — Achievements</div>
+  <h2 class="sec-title">Milestones</h2>
+  <div class="ach-grid">
+    <div class="ach-card"><div class="ach-icon">⚡</div><div class="ach-title">100+ LeetCode Problems</div><div class="ach-desc">DSA practice with focus on data structures, algorithms, and optimization patterns.</div></div>
+    <div class="ach-card"><div class="ach-icon">🏅</div><div class="ach-title">HackerRank SQL Badge</div><div class="ach-desc">Verified HackerRank badge — proficiency in queries, joins, aggregations, and subqueries.</div></div>
+    <div class="ach-card"><div class="ach-icon">🥈</div><div class="ach-title">2nd Prize — Poster Presentation</div><div class="ach-desc">Recognised at inter-college competition for design clarity and technical communication skills.</div></div>
+    <div class="ach-card"><div class="ach-icon">💼</div><div class="ach-title">2 Industry Internships</div><div class="ach-desc">Hands-on experience in real-world software development and delivery workflows.</div></div>
+  </div>
+</section>
+
+<!-- IEEE -->
+<section id="ieee" style="padding-top:0">
+  <div class="sec-label">03 — Research</div>
+  <h2 class="sec-title">IEEE Published Papers</h2>
+  <div class="ieee-grid">
+    <div class="ieee-card">
+      <div class="ieee-num">PAPER — 01 &nbsp;/&nbsp; IEEE</div>
+      <div class="ieee-title">ICICKE-2025</div>
+      <div class="ieee-sub">Leveraging Deep Learning Strategies for Predicting Breast Cancer with Cloud-Based Solution</div>
+      <div class="ieee-meta">Published · IEEE · 2024–2025</div>
+    </div>
+    <div class="ieee-card">
+      <div class="ieee-num">PAPER — 02 &nbsp;/&nbsp; IEEE</div>
+      <div class="ieee-title">ICDBML2026</div>
+      <div class="ieee-sub">AN INTERACTIVE LEARNING MODEL FOR HIGHER EDUCATIONAL INSTITUTION'S (HEIs)</div>
+      <div class="ieee-meta">Published · IEEE · 2025–2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="padding-top:0">
+  <div class="sec-label">04 — Projects</div>
+  <h2 class="sec-title">Things I've Built</h2>
+  <div class="proj-grid">
+    <div class="proj-card" onclick="openProject()">
+      <div class="proj-num">001</div><div class="proj-arrow">↗</div>
+      <div class="proj-name">INDIAN RECIPE APP</div>
+      <div class="proj-desc">This project focuses on delivering a smooth user experience while showcasing traditional Indian cuisine in a modern digital format. Users can quickly discover recipes and follow structured instructions, making cooking simple and enjoyable.</div>
+      <div class="proj-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Bootstrap</span></span></div>
+    </div>
+    <script>
+  function openProject() {
+    window.open("https://indian-recipe.vercel.app/", "_blank");
+  }
+</script>
+    <div class="proj-card" onclick="Fitness()">
+      <div class="proj-num">002</div><div class="proj-arrow">↗</div>
+      <div class="proj-name">HEALTH AND FITNESS APP</div>
+      <div class="proj-desc">Developed workout and meal routine pages with descriptions. Connected the app to MongoDB to store user information. Used Node.js for backend to handle login and user data. We can Provide Feedback to the website and the response is received to our mail also.</div>
+      <div class="proj-tags"><span class="tag">HTML/CSS</span><span class="tag">JavaScript</span><span class="tag">Bootstrap</span><span class="tag">MongoDB</span><span class="tag">Node.js</span></div>
+    </div>
+    <script>
+      function Fitness(){
+        window.open("https://drive.google.com/file/d/1k3_5JN-dLtmrhyppmyD6vPPIigYeNtnT/view?usp=drive_link");
+      }
+    </script>
+    <div class="proj-card" onclick="learning()">
+      <div class="proj-num">003</div><div class="proj-arrow">↗</div>
+      <div class="proj-name">INTERACTIVE LEARNING MODEL FOR HEI's</div>
+      <div class="proj-desc"> Built an interactive 3D learning platform covering DAA, Data Structures, and Operating Systems using OOP-based modular design.Conducted pre/post-learning data analysis to evaluate outcomes.</div>
+      <div class="proj-tags"><span class="tag">HTML/CSS</span><span class="tag">JavaScript</span><span class="tag">Blender</span><span class="tag">MongoDB</span><span class="tag"> AI</span><span class="tag">Node.js</span></div>
+    </div>
+    <script>
+      function learning(){
+        window.open("https://drive.google.com/file/d/1L8B2daSWVJUwV2NMRJA76FEqk8UDBaRt/view?usp=sharing");
+      }
+    </script>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" style="padding-top:0">
+  <div class="sec-label">05 — Skills</div>
+  <h2 class="sec-title">My Stack</h2>
+  <div class="skills-outer">
+    <div class="skill-group">
+      <h3>Technologies</h3>
+      <ul class="skill-list">
+        <li>HTML / CSS <span class="sdot"></span></li>
+        <li>JavaScript <span class="sdot"></span></li>
+        <li>Bootstrap <span class="sdot"></span></li>
+        <li>React.js <span class="sdot"></span></li>
+        <li>Node.js <span class="sdot"></span></li>
+        <li>MongoDB <span class="sdot"></span></li>
+        <li>Java <span class="sdot"></span></li>
+        <li>SQL <span class="sdot"></span></li>
+        <li>Cloud <span class="sdot"></span></li>
+        <li>Software Testing <span class="sdot"></span></li>
+        <li>Poster Design <span class="sdot"></span></li>
+        <li>AI Integration <span class="sdot"></span></li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <h3>Tools</h3>
+      <ul class="skill-list">
+        <li>VS Code <span class="sdot"></span></li>
+        <li>Git / GitHub <span class="sdot"></span></li>
+      </ul>
+      <h3 style="margin-top:30px">Languages</h3>
+      <ul class="skill-list">
+        <li>Tamil <span class="slvl">Native</span></li>
+        <li>English <span class="slvl">Fluent</span></li>
+        <li>Hindi <span class="slvl">Intermediate</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications" style="padding-top:0">
+  <div class="sec-label">06 — Certifications</div>
+  <h2 class="sec-title">My Certifications</h2>
+  <div class="carousel-wrap">
+    <button class="carousel-btn prev" id="certPrev" aria-label="Previous">&#8249;</button>
+    <div class="carousel-track-outer">
+      <div class="carousel-track" id="certTrack">
+        <div class="cert-slide"><span class="cert-num">01</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 200315.png"></div></div></div>
+        <div class="cert-slide"><span class="cert-num">02</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 200523.png"></div></div></div>
+        <div class="cert-slide"><span class="cert-num">03</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 200602.png"></div></div></div>
+        <div class="cert-slide"><span class="cert-num">04</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 200702.png"></div></div></div>
+        <div class="cert-slide"><span class="cert-num">05</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 201152.png"></div></div></div>
+        <div class="cert-slide"><span class="cert-num">06</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 200543.png"></div></div></div>
+        <div class="cert-slide"><span class="cert-num">07</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 200624.png "></div></div></div>
+        <div class="cert-slide"><span class="cert-num">10</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src=" Screenshot 2026-05-28 202216.png"></div></div></div>
+        <div class="cert-slide"><span class="cert-num">08</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 200645.png"></div></div></div>
+        <div class="cert-slide"><span class="cert-num">09</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 200501.png "></div></div></div>
+        <div class="cert-slide"><span class="cert-num">11</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 202329.png "></div></div></div>
+        <div class="cert-slide"><span class="cert-num">12</span><div class="cert-ph-wrap"><div class="cert-ph"></div><div class="cert-txt"><img src="Screenshot 2026-05-28 202353.png "></div></div></div>
+      </div>
+    </div>
+    <button class="carousel-btn next" id="certNext" aria-label="Next">&#8250;</button>
+    <div class="carousel-dots" id="certDots"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="padding-top:0">
+  <div class="sec-label">07 — Contact</div>
+  <div class="contact-grid">
+    <div class="contact-left">
+      <h3>Let's build<br>something great.</h3>
+      <p>Open to full-time roles, internships, and purpose-driven collaborations. Always exploring, always building — reach out and let's connect.</p>
+      <div class="lang-row">
+        <span class="lang-pill">Tamil<span class="lvl">Native</span></span>
+        <span class="lang-pill">English<span class="lvl">Fluent</span></span>
+        <span class="lang-pill">Hindi<span class="lvl">Intermediate</span></span>
+      </div>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:your.email@gmail.com" class="clink"><span class="clink-icon">✉</span>swethas2509@gmail.com</a>
+      <a href="https://www.linkedin.com/in/swethasathish04/" target="_blank" class="clink"><span class="clink-icon">in</span>https://www.linkedin.com/in/swethasathish04/</a>
+      <a href="https://github.com/028-SWETHA" target="_blank" class="clink"><span class="clink-icon">⌥</span>https://github.com/028-SWETHA</a>
+      <a href="https://www.google.com/maps/place/Ramanathapuram,+Tamil+Nadu/@9.3678272,78.8226236,14z/data=!4m6!3m5!1s0x3b0197f8992ac103:0xd76b783dce15f99!8m2!3d9.3639356!4d78.8394819!16zL20vMDVuNTB2?entry=ttu&g_ep=EgoyMDI2MDUyNi4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="clink"><span class="clink-icon">◎</span>Ramanathapuram, Tamil Nadu, India</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="foot-brand">Swetha S.</span>
+  <p>© 2026 — Curious by nature. Builder by practice.</p>
+</footer>
+
+</div><!-- end #site -->
+
+<script>
+/* ── LOADER ── */
+const steps=[
+  {text:'Booting environment...',d:0},
+  {text:'Loading portfolio data...',d:550},
+  {text:'Compiling components...',d:1100},
+  {text:'Running debug checks...',d:1650},
+  {text:'Validating IEEE references...',d:2150},
+  {text:'Optimizing assets...',d:2600},
+  {text:'Ready to deliver. 🌿',d:3000},
+];
+const cont=document.getElementById('termLines');
+const bar=document.getElementById('progressBar');
+const loader=document.getElementById('loader');
+const site=document.getElementById('site');
+steps.forEach((s,i)=>{
+  setTimeout(()=>{
+    if(i>0){const p=cont.children[i-1];if(p){p.classList.remove('active');p.classList.add('done');}}
+    const l=document.createElement('div');
+    l.className='t-line active'+(i===steps.length-1?' final':'');
+    l.textContent=s.text;
+    cont.appendChild(l);
+    bar.style.width=Math.round(((i+1)/steps.length)*100)+'%';
+  },s.d);
+});
+setTimeout(()=>{loader.classList.add('hidden');site.classList.add('visible');},3900);
+
+/* ── THEME ── */
+const toggle=document.getElementById('themeToggle');
+const label=document.getElementById('themeLabel');
+const html=document.documentElement;
+function applyTheme(t){html.setAttribute('data-theme',t);label.textContent=t==='dark'?'Dark':'Light';localStorage.setItem('ss_theme',t);}
+toggle.addEventListener('click',()=>applyTheme(html.getAttribute('data-theme')==='dark'?'light':'dark'));
+const saved=localStorage.getItem('ss_theme');
+if(saved)applyTheme(saved);
+else if(window.matchMedia('(prefers-color-scheme:light)').matches)applyTheme('light');
+
+/* ── CERTIFICATIONS CAROUSEL ── */
+(function(){
+  const track=document.getElementById('certTrack');
+  const prev=document.getElementById('certPrev');
+  const next=document.getElementById('certNext');
+  const dotsWrap=document.getElementById('certDots');
+  const slides=track.querySelectorAll('.cert-slide');
+  let perView=4, current=0;
+
+  function getPerView(){
+    return window.innerWidth<=540?2:window.innerWidth<=960?3:4;
+  }
+  function totalPages(){return Math.ceil(slides.length/perView);}
+
+  function buildDots(){
+    dotsWrap.innerHTML='';
+    for(let i=0;i<totalPages();i++){
+      const d=document.createElement('button');
+      d.className='cdot'+(i===current?' active':'');
+      d.setAttribute('aria-label','Page '+(i+1));
+      d.addEventListener('click',()=>goTo(i));
+      dotsWrap.appendChild(d);
+    }
+  }
+
+  function goTo(page){
+    current=Math.max(0,Math.min(page,totalPages()-1));
+    const gap=20;
+    const slideWidth=slides[0].offsetWidth+gap;
+    track.style.transform='translateX(-'+(current*perView*slideWidth)+'px)';
+    prev.disabled=current===0;
+    next.disabled=current>=totalPages()-1;
+    dotsWrap.querySelectorAll('.cdot').forEach((d,i)=>d.classList.toggle('active',i===current));
+  }
+
+  function init(){
+    perView=getPerView();
+    current=0;
+    buildDots();
+    goTo(0);
+  }
+
+  prev.addEventListener('click',()=>goTo(current-1));
+  next.addEventListener('click',()=>goTo(current+1));
+  window.addEventListener('resize',init);
+  init();
+})();
+</script>
+</body>
+</html>
